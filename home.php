@@ -37,7 +37,7 @@ $pdo = databaseConnection();
 
             <!-- election-officer-link -->
             <div class="col-md-6">
-                <a href="#">Election Commision Officer</a>
+                <a href="index.php?page=electionOfficer/login">Election Commision Officer</a>
             </div>
         </div>
     </div>
