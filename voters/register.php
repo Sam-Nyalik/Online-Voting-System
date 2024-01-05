@@ -78,7 +78,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         return $uvc;
     }
     $uvc = generateUVC(8);
-    echo $uvc;
 
     $uvc_verification = "SELECT * FROM voters WHERE uvc = :uvc";
     if ($stmt = $pdo->prepare($uvc_verification)) {
@@ -89,7 +88,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $uvc_error = "The Unique Verification Code is already taken!";
             } else {
                 $uvc = generateUVC(8);
-                echo $uvc;
             }
         }
     }
@@ -116,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Check for errors before dealing with the database
-    if (empty($fullName_error) && empty($emailAddress_error) && empty($dateOfBirth_error) && empty($constituency_error) && empty($password_error)) {
+    if (empty($fullName_error) && empty($emailAddress_error) && empty($dateOfBirth_error) && empty($constituency_error) && empty($uvc_error) && empty($password_error)) {
 
         // Prepare an INSERT statement
         $sql = "INSERT INTO voters(fullName, emailAddress, dateOfBirth, constituency, uvc, password) VALUES(:fullName, :emailAddress, :dateOfBirth, :constituency, :uvc, :password)";
@@ -138,9 +136,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $param_password = password_hash($password, PASSWORD_DEFAULT);
             // Attempt to execute
             if ($stmt->execute()) {
-                // Redirect user to the login page
-                header("location: index.php?page=voters/login");
-                exit;
+
+                // Get the UVC code from the database
+                $uvc_code = $pdo->prepare("SELECT uvc from voters WHERE emailAddress = '$emailAddress'");
+                $uvc_code->execute();
+                $database_uvc_code = $uvc_code->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($database_uvc_code as $code) :
+                    echo "<script>alert('{$code["uvc"]} is your unique verification code, which will be used when voting. Proceed to the login page')</script>";
+                endforeach;
             } else {
                 echo "There was an error. Please try again!";
             }
@@ -181,7 +185,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <!-- Login Form -->
                     <form action="index.php?page=voters/register" method="post" class="login-form">
                         <!-- UVC ERROR -->
-                        <?php if (!$uvc_error) : ?>
+                        <?php if ($uvc_error) : ?>
                             <span class="errors text-danger"><?= $uvc_error; ?></span>
                         <?php endif; ?>
                         <div class="row">
