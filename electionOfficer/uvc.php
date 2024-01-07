@@ -54,14 +54,26 @@ $pdo = databaseConnection();
                     <tr>
                         <th>#</th>
                         <th>Code</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php foreach ($database_uvc as $uvc_codes) : ?>
+                <?php foreach ($database_uvc as $uvc_codes) : ?>
+                    <tbody>
                         <td><?= $num++ ?></td>
                         <td><?= $uvc_codes["code"]; ?></td>
-                    <?php endforeach; ?>
-                </tbody>
+                        <?php
+                        if ($uvc_codes["voter_id"] == NULL) {
+                        ?>
+                            <td>
+                                <p class="text-danger">Not used</p>
+                            </td>
+                        <?php } else { ?>
+                            <td>
+                                <p class="text-success">Already used</p>
+                            </td>
+                        <?php } ?>
+                    </tbody>
+                <?php endforeach; ?>
             </table>
         </div>
     </div>
