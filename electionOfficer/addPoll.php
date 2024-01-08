@@ -41,7 +41,6 @@ $pdo = databaseConnection();
             <div class="col-md-5">
                 <h3>Create Election Poll</h3>
                 <hr>
-
                 <!-- Form -->
                 <form action="#" method="post" class="login-form">
                     <!-- Candidate Select -->
