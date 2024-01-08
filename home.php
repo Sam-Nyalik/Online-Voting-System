@@ -18,7 +18,7 @@ $pdo = databaseConnection();
 <?= navbarTemplate(); ?>
 
 <!-- Welcome Text -->
-<div class="welcome-text text-center">
+<div class="welcome-text text-center" style="margin-top: 150px;">
     <div class="container">
         <div class="row">
             <h3>Welcome to our online voting platform</h3>

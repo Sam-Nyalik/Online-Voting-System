@@ -1,4 +1,4 @@
-<!-- CONSTITUENCIES -->
+<!-- ELECTIONS CANDIDATES -->
 
 <?php
 
@@ -16,7 +16,7 @@ $pdo = databaseConnection();
 
 
 <!-- Header Template -->
-<?= headerTemplate('ELECTION OFFICER | CONSTITUENCY'); ?>
+<?= headerTemplate('ELECTION OFFICER | CANDIDATES'); ?>
 
 <!-- Navbar Template -->
 <?= dashboardNavbarTemplate(); ?>
@@ -25,7 +25,7 @@ $pdo = databaseConnection();
 <div class="breadcrumb">
     <div class="container">
         <div class="row">
-            <span><a href="index.php?page=electionOfficer/dashboard">Dashboard</a> > Constituency</span>
+            <span><a href="index.php?page=electionOfficer/dashboard">Dashboard</a> > Candidates</span>
         </div>
     </div>
 </div>
@@ -34,35 +34,39 @@ $pdo = databaseConnection();
 <div class="page-heading text-center">
     <div class="container">
         <div class="row">
-            <h3>CONSTITUENCIES</h3>
+            <h3>ELECTION CANDIDATES</h3>
         </div>
     </div>
 </div>
 
-<!-- Constituency table list -->
+<!-- Candidate table list -->
 <div class="table_list">
     <div class="container">
         <div class="row">
             <table class="table table-bordered">
-                <!-- Fetch coinstituencies from the database -->
+                <!-- Fetch election candidates from the database -->
                 <?php
-                $sql = $pdo->prepare("SELECT * FROM constituency");
+                $sql = $pdo->prepare("SELECT * FROM candidate");
                 $sql->execute();
-                $database_query = $sql->fetchAll(PDO::FETCH_ASSOC);
+                $database_election_candidate = $sql->fetchAll(PDO::FETCH_ASSOC);
                 $num = 1;
-
                 ?>
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Constituency Name</th>
+                        <th>Candidate Name</th>
+                        <th>Political Party</th>
+                        <th>Constituency</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-
-                <?php foreach ($database_query as $query) : ?>
+                <?php foreach ($database_election_candidate as $election_candidate) : ?>
                     <tbody>
-                        <td><?= $num++ ?></td>
-                        <td><?= $query["name"]; ?></td>
+                        <td><?= $num++; ?></td>
+                        <td><?= $election_candidate["fullName"]; ?></td>
+                        <td><?= $election_candidate["politicalParty"]; ?></td>
+                        <td><?= $election_candidate["constituency"]; ?></td>
+                        <td></td>
                     </tbody>
                 <?php endforeach; ?>
             </table>
@@ -70,14 +74,14 @@ $pdo = databaseConnection();
     </div>
 </div>
 
-<!-- Link to the addition of a new constituency -->
+<!-- Link to the addition of a new candidate -->
 <div class="add">
     <div class="container w-50">
         <div class="row">
-            <a href="index.php?page=electionOfficer/addConstituency">Add Constituency</a>
+            <a href="index.php?page=electionOfficer/addCandidate">Add Candidate</a>
         </div>
     </div>
 </div>
 
-<!-- Footer Template -->
+<!-- Footer template -->
 <?= footerTemplate(); ?>
