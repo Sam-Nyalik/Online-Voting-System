@@ -1,4 +1,4 @@
-<!-- ADD CONSTITUENCY -->
+<!-- ADD POLITICAL PARTY -->
 
 <?php
 
@@ -17,25 +17,25 @@ include_once "./functions/functions.php";
 $pdo = databaseConnection();
 
 // Define variables and assign them empty values
-$constituencyName = "";
-$constituencyName_error = "";
+$partyName = "";
+$partyName_error = "";
 
 // Process form data when the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate name
-    if (empty(trim($_POST["constituencyName"]))) {
-        $constituencyName_error = "Field is required!";
+    if (empty(trim($_POST["partyName"]))) {
+        $partyName_error = "Field is required!";
     } else {
         // Check if the name already exists
-        $sql = "SELECT * FROM constituency WHERE name = :name";
+        $sql = "SELECT * FROM politicalParty WHERE name = :name";
         if ($stmt = $pdo->prepare($sql)) {
             $stmt->bindParam(":name", $param_name, PDO::PARAM_STR);
-            $param_name = trim($_POST["constituencyName"]);
+            $param_name = trim($_POST["partyName"]);
             if ($stmt->execute()) {
                 if ($stmt->rowCount() > 0) {
-                    $constituencyName_error = "Name already exists!";
+                    $partyName_error = "Name already exists!";
                 } else {
-                    $constituencyName = trim($_POST["constituencyName"]);
+                    $partyName = trim($_POST["partyName"]);
                 }
             }
         }
@@ -44,15 +44,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     //Check for errors before dealing with the database
-    if (empty($constituencyName_error)) {
+    if (empty($partyName_error)) {
         // Prepare an INSERT statement
-        $sql = "INSERT INTO constituency(name) VALUES(:constituencyName)";
+        $sql = "INSERT INTO politicalParty(name) VALUES(:partyName)";
         if ($stmt = $pdo->prepare($sql)) {
-            $stmt->bindParam(":constituencyName", $param_constituencyName, PDO::PARAM_STR);
-            $param_constituencyName = $constituencyName;
+            $stmt->bindParam(":partyName", $param_partyName, PDO::PARAM_STR);
+            $param_partyName = $partyName;
             if ($stmt->execute()) {
                 // Added successfully
-                header("location: index.php?page=electionOfficer/constituency");
+                header("location: index.php?page=electionOfficer/politicalParty");
             } else {
                 echo "There was an error. please try again!";
             }
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!-- Header Template -->
-<?= headerTemplate('ELECTION OFFICER | ADD CONSTITUENCY'); ?>
+<?= headerTemplate('ELECTION OFFICER | ADD POLITICAL PARTY'); ?>
 
 <!-- Navbar Template -->
 <?= dashboardNavbarTemplate(); ?>
@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="breadcrumb">
     <div class="container">
         <div class="row">
-            <span><a href="index.php?page=electionOfficer/dashboard">Dashboard</a> > <a href="index.php?page=electionOfficer/constituency">Constituency</a> > Add constituency</span>
+            <span><a href="index.php?page=electionOfficer/dashboard">Dashboard</a> > <a href="index.php?page=electionOfficer/politicalParty">Political party</a> > Add political party</span>
         </div>
     </div>
 </div>
@@ -84,25 +84,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <div class="row">
             <div class="col-md-5">
-                <h3>Add a constituency</h3>
+                <h3>Add a political party</h3>
                 <hr>
 
                 <!-- Form -->
-                <form action="index.php?page=electionOfficer/addConstituency" method="post" class="login-form">
+                <form action="index.php?page=electionOfficer/addPoliticalParty" method="post" class="login-form">
                     <!-- Name -->
                     <div class="form-group my-3">
                         <label for="Name">Name</label>
-                        <input type="text" name="constituencyName" class="form-control 
-                        <?php echo (!empty($constituencyName_error)) ? 'is-invalid' : ''; ?>" value="<?php echo $constituencyName; ?>">
-                        <span class="errors text-danger"><?php echo $constituencyName_error; ?></span>
+                        <input type="text" name="partyName" class="form-control 
+                        <?php echo (!empty($partyName_error)) ? 'is-invalid' : ''; ?>" value="<?php echo $partyName; ?>">
+                        <span class="errors text-danger"><?php echo $partyName_error; ?></span>
                     </div>
 
                     <!-- Submit btn -->
                     <div class="form-group my-3">
-                        <input type="submit" value="Add constituency" class="btn w-100">
+                        <input type="submit" value="Add party" class="btn w-100">
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
+
+<!-- Footer Template -->
+<?= footerTemplate(); ?>

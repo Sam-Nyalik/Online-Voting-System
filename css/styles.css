@@ -1,0 +1,175 @@
+/* Color variables */
+:root {
+    --main-color: #fff;
+    --primary-color: #094d4d;
+    --secondary-color: #16a4a4;
+    --tertiary-color: #800000;
+    --dark-color: #000;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+/* Homepage navbar */
+.navbar {
+    background-color: var(--primary-color);
+    height: 75px;
+}
+
+.navbar .navbar-brand {
+    color: var(--main-color);
+    font-size: 30px;
+    font-weight: 500;
+}
+
+/* Dashboard Navbar */
+.navbar .navbar-toggler .navbar-toggler-icon {
+    background-color: var(--tertiary-color);
+}
+
+.navbar .navbar-nav .nav-item a {
+    color: var(--main-color);
+    font-size: 16px;
+}
+
+.navbar .navbar-nav .nav-item .dropdown-menu {
+    background-color: var(--dark-color);
+}
+
+.navbar .navbar-nav .nav-item .dropdown-menu .dropdown-item:hover {
+    color: var(--dark-color)
+}
+
+/* Homepage welcome text */
+.welcome-text {
+    margin-top: 100px;
+}
+
+/* Homepage account links */
+.account-links {
+    margin-top: 80px;
+}
+
+.account-links .col-md-6 a {
+    text-decoration: none;
+    border: none;
+    color: var(--main-color);
+    background: var(--primary-color);
+    padding: 30px 40px;
+    border-radius: 8px;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    margin-top: 45px;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: var(--tertiary-color);
+}
+
+.breadcrumb a:hover {
+    color: var(--tertiary-color);
+}
+
+/* Login Section */
+.form {
+    margin-top: 55px;
+}
+
+.form h3 {
+    font-size: 35px;
+}
+
+.form p {
+    font-weight: 300;
+}
+
+.form .login-form .form-group label {
+    font-weight: 300;
+}
+
+.form .login-form .form-group .form-control {
+    box-shadow: none;
+    outline: 0;
+    padding: 8px;
+}
+
+.form .login-form .form-group .btn {
+    background-color: var(--dark-color);
+    padding: 10px;
+    color: var(--main-color);
+}
+
+/* Page Heading */
+.page-heading {
+    margin-top: 40px;
+}
+
+.page-heading h3 {
+    font-size: 20px;
+    color: var(--tertiary-color);
+    font-weight: 400;
+}
+
+/* Welcome Text */
+.welcome-text {
+    margin-top: 20px;
+}
+
+.welcome-text h5 {
+    font-size: 18px;
+    font-weight: 300;
+}
+
+/* Dashboard Cards */
+.dashboard-cards {
+    margin-top: 65px;
+    margin-bottom: 40px;
+}
+
+.dashboard-cards .card {
+    border: 1px solid var(--primary-color);
+    padding: 70px 30px;
+}
+
+.dashboard-cards .card h5 {
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 300;
+}
+
+.dashboard-cards .card h5 a {
+    color: var(--tertiary-color);
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: capitalize;
+}
+
+/* Table List */
+.table_list {
+    margin: 45px 0;
+}
+
+/* Add link */
+.add {
+    margin-top: 40px;
+}
+
+.add a {
+    text-decoration: none;
+    color: var(--main-color);
+    background-color: var(--secondary-color);
+    padding: 20px 10px;
+    text-align: center;
+    border-radius: 6px;
+}
+
+.add a:hover {
+    color: var(--tertiary-color);
+}

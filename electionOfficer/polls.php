@@ -1,4 +1,4 @@
-<!-- CONSTITUENCIES -->
+<!-- ELECTION POLLS -->
 
 <?php
 
@@ -16,7 +16,7 @@ $pdo = databaseConnection();
 
 
 <!-- Header Template -->
-<?= headerTemplate('ELECTION OFFICER | CONSTITUENCY'); ?>
+<?= headerTemplate('ELECTION OFFICER | POLLS'); ?>
 
 <!-- Navbar Template -->
 <?= dashboardNavbarTemplate(); ?>
@@ -25,7 +25,7 @@ $pdo = databaseConnection();
 <div class="breadcrumb">
     <div class="container">
         <div class="row">
-            <span><a href="index.php?page=electionOfficer/dashboard">Dashboard</a> > Constituency</span>
+            <span><a href="index.php?page=electionOfficer/dashboard">Dashboard</a> > Election Polls</span>
         </div>
     </div>
 </div>
@@ -34,47 +34,35 @@ $pdo = databaseConnection();
 <div class="page-heading text-center">
     <div class="container">
         <div class="row">
-            <h3>CONSTITUENCIES</h3>
+            <h3>ELECTION POLLS</h3>
         </div>
     </div>
 </div>
 
-<!-- Constituency table list -->
+<!-- Election polls table list -->
 <div class="table_list">
     <div class="container">
         <div class="row">
             <table class="table table-bordered">
-                <!-- Fetch coinstituencies from the database -->
-                <?php
-                $sql = $pdo->prepare("SELECT * FROM constituency");
-                $sql->execute();
-                $database_query = $sql->fetchAll(PDO::FETCH_ASSOC);
-                $num = 1;
-
-                ?>
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Candidate Name</th>
+                        <th>Party Name</th>
                         <th>Constituency Name</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
-
-                <?php foreach ($database_query as $query) : ?>
-                    <tbody>
-                        <td><?= $num++ ?></td>
-                        <td><?= $query["name"]; ?></td>
-                    </tbody>
-                <?php endforeach; ?>
             </table>
         </div>
     </div>
 </div>
 
-<!-- Link to the addition of a new constituency -->
+<!-- Link to the creation of a new poll -->
 <div class="add">
     <div class="container w-50">
         <div class="row">
-            <a href="index.php?page=electionOfficer/addConstituency">Add Constituency</a>
+            <a href="index.php?page=electionOfficer/addPoll">Add Poll</a>
         </div>
     </div>
 </div>
