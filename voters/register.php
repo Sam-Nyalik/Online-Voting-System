@@ -66,30 +66,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $constituency = trim($_POST["constituency"]);
     }
 
-    // Unique Verification Code generator and Verification
-    function generateUVC($length = 8)
-    {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $uvc = '';
-
-        for ($i = 0; $i < $length; $i++) {
-            $uvc .= $characters[mt_rand(0, strlen($characters) - 1)];
-        }
-        return $uvc;
-    }
-    $uvc = generateUVC(8);
-
-    $uvc_verification = "SELECT * FROM voters WHERE uvc = :uvc";
-    if ($stmt = $pdo->prepare($uvc_verification)) {
-        $stmt->bindParam(":uvc", $param_uvc_verification, PDO::PARAM_STR);
-        $param_uvc_verification = $uvc;
-        if ($stmt->execute()) {
-            if ($stmt->rowCount() > 0) {
-                $uvc_error = "The Unique Verification Code is already taken!";
-            } else {
-                $uvc = generateUVC(8);
+    // Validate UVC 
+    if (empty(trim($_POST["uvc_code"]))) {
+        $uvc_error = "Field is required!";
+    } else {
+        // Check if the UVC code has already been taken
+        $sql = "SELECT * FROM voters WHERE uvc = :uvc_code_input";
+        if ($stmt = $pdo->prepare($sql)) {
+            $stmt->bindParam(":uvc_code_input", $param_uvc_input, PDO::PARAM_STR);
+            $param_uvc_input = trim($_POST["uvc_code"]);
+            if ($stmt->execute()) {
+                if ($stmt->rowCount() > 0) {
+                    // UVC has already been taken, generate an error
+                    $uvc_error = "This code has already been taken, choose another one!";
+                } else {
+                    $uvc = trim($_POST["uvc_code"]);
+                }
             }
         }
+
+        unset($stmt);
     }
 
     // Validate password
@@ -134,17 +130,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $param_constituency = $constituency;
             $param_uvc = $uvc;
             $param_password = password_hash($password, PASSWORD_DEFAULT);
+
+
             // Attempt to execute
             if ($stmt->execute()) {
-
-                // Get the UVC code from the database
-                $uvc_code = $pdo->prepare("SELECT uvc from voters WHERE emailAddress = '$emailAddress'");
-                $uvc_code->execute();
-                $database_uvc_code = $uvc_code->fetchAll(PDO::FETCH_ASSOC);
-
-                foreach ($database_uvc_code as $code) :
-                    echo "<script>alert('{$code["uvc"]} is your unique verification code, which will be used when voting. Proceed to the login page')</script>";
-                endforeach;
+                //Generate a poll card in the form of a pop-up alert
+                echo "<script>alert('Your unique verification code (UVC): {$uvc}');
+                
+                window.location.href = 'index.php?page=voters/login';
+                </script>";
             } else {
                 echo "There was an error. Please try again!";
             }
@@ -184,10 +178,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <!-- Login Form -->
                     <form action="index.php?page=voters/register" method="post" class="login-form">
-                        <!-- UVC ERROR -->
-                        <?php if ($uvc_error) : ?>
-                            <span class="errors text-danger"><?= $uvc_error; ?></span>
-                        <?php endif; ?>
                         <div class="row">
                             <!-- FullName -->
                             <div class="col-6">
@@ -218,25 +208,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                             </div>
 
-                            <!-- Constituency -->
+                            <!-- UVC  -->
                             <div class="col-6">
                                 <div class="form-group my-2">
-                                    <label for="constituency">Constituency</label>
-                                    <!-- Fetch constituency data from the database -->
-                                    <?php
-                                    $sql = $pdo->prepare("SELECT * FROM constituency");
-                                    $sql->execute();
-                                    $database_query = $sql->fetchAll(PDO::FETCH_ASSOC);
-                                    ?>
-
-                                    <select name="constituency" class="form-control <?php echo (!empty($constituency_error)) ? 'is-invalid' : ''; ?>">
-                                        <?php foreach ($database_query as $query) : ?>
-                                            <option value="<?= $query['name']; ?>"><?= $query["name"]; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <span class="errors text-danger"><?php echo $constituency_error; ?></span>
+                                    <label for="UVC">Verification Code<label>
+                                            <!-- Fetch UVCs from the database -->
+                                            <?php
+                                            $sql = $pdo->prepare("SELECT * FROM uvc");
+                                            $sql->execute();
+                                            $database_uvc = $sql->fetchAll(PDO::FETCH_ASSOC);
+                                            ?>
+                                            <select name="uvc_code" class="form-control <?php echo (!empty($uvc_error)) ? 'is-invalid' : ''; ?>">
+                                                <option value="Choose a code" disabled>Choose a code</option>
+                                                <?php foreach ($database_uvc as $uvcCode) : ?>
+                                                    <option value="<?= $uvcCode["code"]; ?>"><?= $uvcCode["code"]; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <span class="errors text-danger"><?php echo $uvc_error; ?></span>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Constituency -->
+                        <div class="form-group my-2">
+                            <label for="constituency">Constituency</label>
+                            <!-- Fetch constituency data from the database -->
+                            <?php
+                            $sql = $pdo->prepare("SELECT * FROM constituency");
+                            $sql->execute();
+                            $database_query = $sql->fetchAll(PDO::FETCH_ASSOC);
+                            ?>
+
+                            <select name="constituency" class="form-control <?php echo (!empty($constituency_error)) ? 'is-invalid' : ''; ?>">
+                                <?php foreach ($database_query as $query) : ?>
+                                    <option value="<?= $query['name']; ?>"><?= $query["name"]; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <span class="errors text-danger"><?php echo $constituency_error; ?></span>
                         </div>
 
                         <div class="row">
@@ -261,7 +269,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         <!-- Login btn -->
                         <div class="form-group my-2">
-                            <input type="submit" class="btn w-100 text-center" value="Login">
+                            <input type="submit" class="btn w-100 text-center" value="Register">
                         </div>
                     </form>
             </div>
