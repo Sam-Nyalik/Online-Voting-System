@@ -62,14 +62,14 @@ $pdo = databaseConnection();
                         <td><?= $num++ ?></td>
                         <td><?= $uvc_codes["code"]; ?></td>
                         <?php
-                        if ($uvc_codes["voter_id"] == NULL) {
+                        if ($uvc_codes["status"] == 0) {
                         ?>
                             <td>
-                                <p class="text-danger">Not used</p>
+                                <p class="text-danger">Not taken</p>
                             </td>
                         <?php } else { ?>
                             <td>
-                                <p class="text-success">Already used</p>
+                                <p class="text-success">Taken</p>
                             </td>
                         <?php } ?>
                     </tbody>
