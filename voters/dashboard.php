@@ -1,12 +1,5 @@
 <!-- VOTER DASHBOARD -->
 
-<!-- Navbar -->
-<!-- Welcome message -->
-<!-- header template -->
-<!-- Footer template -->
-<!-- Polls/elections -->
-<!-- Vote -->
-
 <?php
 
 // Start session
@@ -16,8 +9,13 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Check login
-include_once "includes/check_login.php";
+// Check login status
+if (!isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] !== true) {
+    //Redirect user to the login page
+    header("location: index.php?page=voters/login");
+    exit;
+}
+
 
 // Functions and database connection
 include_once "functions/functions.php";
